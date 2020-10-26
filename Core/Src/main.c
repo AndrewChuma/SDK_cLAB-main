@@ -95,12 +95,20 @@ int main(void)
   MX_USART3_UART_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-
+__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
   /* Do not remove this code below */
   MX_TRACE_Init();
   SDK_TRACE_Start();
   /* Do not remove this code from above */
-
+const char buff[] = "UART3\n";
+int N = strlen(buff)-1;
+SDK_TRACE_Timestamp(PRINT, 1);
+SDK_TRACE_Print("%s","Sending of string from UART3");
+//USART3->DR = 'A';
+for(int i = 0; i<N; ++i){
+	USART3->DR = buff[i];
+}
+SDK_TRACE_Timestamp(PRINT, 0);
   /*SDK_TRACE_Timestamp(PRINT, 1);
   SDK_TRACE_Print("%s","LEDs Blink test");
   SDK_TRACE_Timestamp(PRINT, 0);
@@ -140,7 +148,7 @@ int main(void)
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
   /* Start scheduler */
-  osKernelStart();
+  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */

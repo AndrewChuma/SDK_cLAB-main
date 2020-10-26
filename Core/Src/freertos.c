@@ -44,7 +44,9 @@ typedef struct Pack{
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+QueueHandle_t myQueue1;
+extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart3;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
