@@ -95,20 +95,40 @@ int main(void)
   MX_USART3_UART_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+//__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
   /* Do not remove this code below */
   MX_TRACE_Init();
   SDK_TRACE_Start();
   /* Do not remove this code from above */
 const char buff[] = "UART3\n";
-int N = strlen(buff)-1;
+char rcve[6];
 SDK_TRACE_Timestamp(PRINT, 1);
-SDK_TRACE_Print("%s","Sending of string from UART3");
-//USART3->DR = 'A';
-for(int i = 0; i<N; ++i){
-	USART3->DR = buff[i];
-}
+HAL_UART_Transmit(&huart3, buff, 6, 50);
+
+HAL_UART_Receive(&huart2, rcve, 6, 50);
+
+
+
+//SDK_TRACE_Print("%s",&huart2->pRxBuffPtr);
+	SDK_TRACE_Print("%s",rcve);
+SDK_TRACE_Stop();
+
+
+
+/*USART3->DR = buff[0];
+SDK_TRACE_Timestamp(P9, 0);
+HAL_Delay(1000);
+USART3->DR = buff[1];
+SDK_TRACE_Timestamp(P9, 0);
+HAL_Delay(1000);
+USART3->DR = buff[2];
+SDK_TRACE_Timestamp(P9, 0);
+HAL_Delay(1000);*/
+//USART3->DR = buff[3];
+//USART3->DR = buff[4];
 SDK_TRACE_Timestamp(PRINT, 0);
+
+
   /*SDK_TRACE_Timestamp(PRINT, 1);
   SDK_TRACE_Print("%s","LEDs Blink test");
   SDK_TRACE_Timestamp(PRINT, 0);
@@ -214,7 +234,14 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_UART_RxCplt_Callback(UART_HandleTypeDef *huart)
+{
+	if(huart == &huart2){
+		SDK_TRACE_Print("%s","Callback function");
 
+
+	}
+}
 /* USER CODE END 4 */
 
 /**

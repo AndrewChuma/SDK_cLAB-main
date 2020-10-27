@@ -192,18 +192,16 @@ void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
 
-	SDK_TRACE_Timestamp(PRINT, 1);
+	/*SDK_TRACE_Timestamp(PRINT, 1);
 	SDK_TRACE_Print("%s","The message from UART3 is");
-	rcv[y++] = USART2->DR;
-	if(rcv[y] == '\n'){
-	SDK_TRACE_Print("%s",rcv);
-
-	SDK_TRACE_Timestamp(PRINT, 0);
+	rcv[y] = USART2->DR;
+	y+=1;
+	SDK_TRACE_Timestamp(P8, 1);
 
 
-	SDK_TRACE_Stop();
-	y = 0;
-	}
+	SDK_TRACE_Print("%s",rcv);*/
+
+
 
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
