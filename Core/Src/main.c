@@ -28,6 +28,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "trace.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +48,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+RTC_TimeTypeDef time;
+RTC_DateTypeDef date;
+char str_for_date[100];
+char str_for_time[100];
+uint8_t msg_sending_from_USART3[] = "USART3";
+uint8_t msg_receiving_in_USART2[6];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -95,39 +101,32 @@ int main(void)
   MX_USART3_UART_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-//__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+/*
+ * Функция включает прерывания по флагу RXNE, разобраться, что это за флаг
+ * и какие еще бывают.
+ * В рамках 1-й лабы, раскомментировать ее и перейти в файл stm32f4xx_it.c
+ * В обработчике прерываний по USART2, принять и обработать сообщение.
+ */
+  //__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+
   /* Do not remove this code below */
   MX_TRACE_Init();
   SDK_TRACE_Start();
   /* Do not remove this code from above */
-const char buff[] = "UART3\n";
-char rcve[6];
-SDK_TRACE_Timestamp(PRINT, 1);
-HAL_UART_Transmit(&huart3, buff, 6, 50);
+/* Блок работы с UART и функциями обратного вызова ---------------------------------------------------------*/
 
-HAL_UART_Receive(&huart2, rcve, 6, 50);
+  /* Блокирующие функции */
+  /* HAL_UART_Transmit(&huart3, msg_sending_from_USART3, 6, 50);
 
+  	 HAL_UART_Receive(&huart2, msg_receiving_in_USART2, 6, 50); */
 
+  /* Неблокирующие функции */
+  /*HAL_UART_Transmit_IT(&huart3, msg_sending_from_USART3, 6);
 
-//SDK_TRACE_Print("%s",&huart2->pRxBuffPtr);
-	SDK_TRACE_Print("%s",rcve);
-SDK_TRACE_Stop();
+  	HAL_UART_Receive_IT(&huart2, msg_receiving_in_USART2, 6); */
+/* ---------------------------------------------------------------------------------------------------------*/
 
-
-
-/*USART3->DR = buff[0];
-SDK_TRACE_Timestamp(P9, 0);
-HAL_Delay(1000);
-USART3->DR = buff[1];
-SDK_TRACE_Timestamp(P9, 0);
-HAL_Delay(1000);
-USART3->DR = buff[2];
-SDK_TRACE_Timestamp(P9, 0);
-HAL_Delay(1000);*/
-//USART3->DR = buff[3];
-//USART3->DR = buff[4];
-SDK_TRACE_Timestamp(PRINT, 0);
-
+/* Тестовый пример работы со светодиодами ------------------------------------------------------------------*/
 
   /*SDK_TRACE_Timestamp(PRINT, 1);
   SDK_TRACE_Print("%s","LEDs Blink test");
@@ -163,12 +162,33 @@ SDK_TRACE_Timestamp(PRINT, 0);
  // SDK_TRACE_Stop();
   /* Do not remove this code from above */
 
+/*---------------------------------------------------------------------------------------------------------*/
+
+/* Блок работы c RTC --------------------------------------------------------------------------------------*/
+
+  /*SDK_TRACE_Timestamp(PRINT, 0);
+HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BCD);
+HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BCD);
+SDK_TRACE_Timestamp(PRINT, 1);
+
+sprintf(str_for_time, "1: Hour = %d Minutes = %d Seconds = %d", time.Hours, time.Minutes, time.Seconds);
+sprintf(str_for_date, "1: WeekDay = %d Date = %d Month = %d Year = %d", date.WeekDay, date.Date, date.Month, date.Year);
+
+SDK_TRACE_Timestamp(PRINT, 0);
+SDK_TRACE_Print(str_for_time);
+SDK_TRACE_Print(str_for_date);
+SDK_TRACE_Timestamp(PRINT, 1);
+
+SDK_TRACE_Stop();*/
+
+/*---------------------------------------------------------------------------------------------------------*/
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
   /* Start scheduler */
-  //osKernelStart();
+
+  //osKernelStart(); // Функция включает планировщик задач FreeRTOS
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -232,16 +252,27 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
-
+/*
+ * Функции обратного вызова, в рамках 1-й лабораторной,
+ * разобраться в принципе их работы.
+ */
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCplt_Callback(UART_HandleTypeDef *huart)
+/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart == &huart2){
+		//SDK_TRACE_Print("%s", msg_receiving_in_USART2);
+		SDK_TRACE_Print("%s", msg_receiving_in_USART2);
+		SDK_TRACE_Stop();
+	}
+}
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart == &huart3){
 		SDK_TRACE_Print("%s","Callback function");
 
 
 	}
-}
+}*/
 /* USER CODE END 4 */
 
 /**

@@ -121,7 +121,7 @@ void MX_FREERTOS_Init(void) {
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
-int count = 0;
+
 Msg_t xMessage = {19,"Hello from DefTask"};
 /**
   * @brief  Function implementing the defaultTask thread.
@@ -132,26 +132,20 @@ Msg_t xMessage = {19,"Hello from DefTask"};
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-	char from_usart[14];
+	Msg_t *message;
+
 	SDK_TRACE_Timestamp(PRINT, 2);
-	  SDK_TRACE_Print("%s","FRtosTest DefTask");
-	  SDK_TRACE_Timestamp(PRINT, 3);
-	  /*Msg_t *message;
-	 		  xQueueReceive(myQueue1, &(message), 10);
-	 		  SDK_TRACE_Print("%s",message->sending_buffer);*/
-	 		HAL_UART_Receive(&huart3, from_usart, 14, 100);
-	 		SDK_TRACE_Print("%s",from_usart);
-	 		 SDK_TRACE_Stop();
+	SDK_TRACE_Print("%s","FRtosTest DefTask");
+	SDK_TRACE_Timestamp(PRINT, 3);
+
+	xQueueReceive(myQueue1, &(message), 10);
+
+	SDK_TRACE_Print("%s",message->sending_buffer);
+
+	SDK_TRACE_Stop();
   /* Infinite loop */
   for(;;)
   {
-	  /*HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-	  	  SDK_TRACE_Timestamp(LED3, HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_15));
-	  	  if(count == 5){
-	  		  count = 0;
-	  		 SDK_TRACE_Stop();
-	  	  }*/
-
     osDelay(100);
   }
   /* USER CODE END StartDefaultTask */
@@ -161,15 +155,17 @@ void StartDefaultTask(void const * argument)
 /* USER CODE BEGIN Application */
 void UserTask(void const * argument)
 {
-	char to_usart[] = "Usart works!";
+
 	Msg_t *message = &xMessage;
 	SDK_TRACE_Timestamp(PRINT, 1);
-		  SDK_TRACE_Print("%s","FRtosTest UserTask");
-		  SDK_TRACE_Timestamp(PRINT, 0);
-		/*  if(xQueueSend(myQueue1,(void*)&message, 10)!=pdPASS){
+	SDK_TRACE_Print("%s","FRtosTest UserTask");
+	SDK_TRACE_Timestamp(PRINT, 0);
+
+		 if(xQueueSend(myQueue1,(void*)&message, 10)!=pdPASS)
+		 {
 		  	SDK_TRACE_Print("%s","Failed to send");
-		  }*/
-		  HAL_UART_Transmit(&huart2, to_usart, 13, 100);
+		 }
+
 	for(;;)
 	{
 

@@ -56,7 +56,7 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-char rcv[50];
+uint8_t msg_receiving[50];
 int y = 0;
 /* USER CODE END 0 */
 
@@ -192,19 +192,10 @@ void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
 
-	/*SDK_TRACE_Timestamp(PRINT, 1);
-	SDK_TRACE_Print("%s","The message from UART3 is");
-	rcv[y] = USART2->DR;
-	y+=1;
-	SDK_TRACE_Timestamp(P8, 1);
-
-
-	SDK_TRACE_Print("%s",rcv);*/
-
 
 
   /* USER CODE END USART2_IRQn 0 */
-  HAL_UART_IRQHandler(&huart2);
+ // HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
 
   /* USER CODE END USART2_IRQn 1 */

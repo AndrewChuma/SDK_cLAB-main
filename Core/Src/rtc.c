@@ -21,7 +21,8 @@
 #include "rtc.h"
 
 /* USER CODE BEGIN 0 */
-
+RTC_TimeTypeDef m_time = {0};
+RTC_DateTypeDef m_date = {0};
 /* USER CODE END 0 */
 
 RTC_HandleTypeDef hrtc;
@@ -43,7 +44,13 @@ void MX_RTC_Init(void)
   {
     Error_Handler();
   }
-
+m_date.WeekDay = RTC_WEEKDAY_THURSDAY;
+m_date.Month = RTC_MONTH_OCTOBER;
+m_date.Date = 0x29;
+m_date.Year = 0x20;
+if(HAL_RTC_SetDate(&hrtc, &m_date, RTC_FORMAT_BCD)!=HAL_OK){
+	Error_Handler();
+}
 }
 
 void HAL_RTC_MspInit(RTC_HandleTypeDef* rtcHandle)
